@@ -17,9 +17,9 @@ final class SearchGIFNode: BaseDisplayNode {
     }
     
     override init() {
-        let flowLayout = AdaptiveCollectionViewLayout(numberOfColumns: 2, cellPadding: 15)
-        collectionNode = ASCollectionNode(collectionViewLayout: flowLayout)
-        collectionNode.contentInset = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
+        let layout = AdaptiveCollectionViewLayout(numberOfColumns: 2, cellPadding: 12)
+        collectionNode = ASCollectionNode(collectionViewLayout: layout)
+        collectionNode.contentInset = UIEdgeInsets(top: 15, left: 20, bottom: 15, right: 20)
         super.init()
     }
     

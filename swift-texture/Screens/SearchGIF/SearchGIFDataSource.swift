@@ -20,22 +20,34 @@ final class SearchGIFDataSource: NSObject {
 extension SearchGIFDataSource: ASCollectionDataSource {
     
     func collectionNode(_ collectionNode: ASCollectionNode, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.gifs.value.count
+        return viewModel.numberOfGIFs
     }
     
     func collectionNode(_ collectionNode: ASCollectionNode, nodeBlockForItemAt indexPath: IndexPath) -> ASCellNodeBlock {
-        guard viewModel.gifs.value.count > indexPath.row else { return { ASCellNode() } }
+        guard viewModel.numberOfGIFs > indexPath.row else { return { ASCellNode() } }
 
-        let gif = viewModel.gifs.value[indexPath.row]
+        let gif = viewModel.gif(at: indexPath)
         return { GIFCellNode(gif: gif) }
     }
 }
 
-// MARK: - AdaptiveCollectionViewLayoutDelegate
+// MARK: - ASCollectionDelegate
+extension SearchGIFDataSource: ASCollectionDelegate {
+    
+    func shouldBatchFetch(for collectionNode: ASCollectionNode) -> Bool {
+        return viewModel.pagination.offset <= viewModel.pagination.totalCount
+    }
+    
+    func collectionNode(_ collectionNode: ASCollectionNode, willBeginBatchFetchWith context: ASBatchContext) {
+        viewModel.fetchNewBatch(with: context)
+    }
+}
+
+// MARK: - AdaptiveCollectionViewLayout
 extension SearchGIFDataSource: AdaptiveCollectionViewLayoutDelegate {
     
     func heightForItem(at indexPath: IndexPath) -> CGFloat {
-        let height = viewModel.gifs.value[indexPath.row].imageHeight
+        let height = viewModel.gif(at: indexPath).imageHeight
         return CGFloat(height)
     }
 }

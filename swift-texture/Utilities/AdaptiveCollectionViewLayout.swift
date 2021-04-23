@@ -11,7 +11,7 @@ protocol AdaptiveCollectionViewLayoutDelegate: AnyObject {
     func heightForItem(at indexPath: IndexPath) -> CGFloat
 }
 
-class AdaptiveCollectionViewLayout: UICollectionViewLayout {
+class AdaptiveCollectionViewLayout: UICollectionViewFlowLayout {
     
     weak var delegate: AdaptiveCollectionViewLayoutDelegate?
     

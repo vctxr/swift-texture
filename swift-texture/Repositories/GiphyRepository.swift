@@ -15,9 +15,9 @@ struct GiphyRepository: GiphyRepositoryProtocol {
         self.networkManager = networkManager
     }
     
-    func searchGIF(query: String) -> Single<GiphyResponse> {
+    func searchGIF(query: String, offset: Int) -> Single<GiphyResponse> {
         return Single.create { single in
-            let request = GiphyEndpoint.searchGIFs(query: query).urlRequest
+            let request = GiphyEndpoint.searchGIFs(query: query, offset: offset).urlRequest
             
             networkManager.request(with: request, isDecoded: true) { (result: Result<GiphyResponse, RequestError>) in
                 switch result {

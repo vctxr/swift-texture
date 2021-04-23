@@ -8,7 +8,7 @@
 import Foundation
 
 enum GiphyEndpoint: Endpoint {
-    case searchGIFs(query: String)
+    case searchGIFs(query: String, offset: Int)
 }
 
 extension GiphyEndpoint {
@@ -30,8 +30,9 @@ extension GiphyEndpoint {
         var urlQueryItems = [URLQueryItem(name: "api_key", value: apiKey)]
         
         switch self {
-        case .searchGIFs(query: let query):
+        case .searchGIFs(query: let query, offset: let offset):
             urlQueryItems.append(URLQueryItem(name: "q", value: query))
+            urlQueryItems.append(URLQueryItem(name: "offset", value: "\(offset)"))
             return urlQueryItems
         }
     }

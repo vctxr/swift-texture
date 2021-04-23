@@ -8,5 +8,5 @@
 import RxSwift
 
 protocol GiphyRepositoryProtocol {
-    func searchGIF(query: String) -> Single<GiphyResponse>
+    func searchGIF(query: String, offset: Int) -> Single<GiphyResponse>
 }

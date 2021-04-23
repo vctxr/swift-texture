@@ -18,6 +18,10 @@ final class NetworkManager: Networking {
                                isDecoded: Bool = true,
                                completion: @escaping (Result<T, RequestError>) -> Void) {
         
+        #if DEBUG
+        logRequest(request: request)
+        #endif
+        
         let task = urlSession.dataTask(with: request) { data, response, error in
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode else {
                 return completion(.failure(.noResponse))
@@ -54,5 +58,14 @@ final class NetworkManager: Networking {
         urlSession.getTasksWithCompletionHandler { (dataTasks, _, _) in
             dataTasks.forEach { $0.cancel() }
         }
+    }
+}
+
+extension NetworkManager {
+    
+    private func logRequest(request: URLRequest) {
+        print("==============================================")
+        print(request)
+        print("==============================================")
     }
 }

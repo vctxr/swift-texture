@@ -13,7 +13,9 @@ final class SearchGIFVC: ASDKViewController<SearchGIFNode> {
     private let viewModel: SearchGIFVM
     private let disposeBag = DisposeBag()
     private let dataSource: SearchGIFDataSource
+    
     private let activityIndicator = UIActivityIndicatorView()
+    private let searchController = UISearchController()
     
     init(viewModel: SearchGIFVM = SearchGIFVM()) {
         self.viewModel = viewModel
@@ -21,6 +23,7 @@ final class SearchGIFVC: ASDKViewController<SearchGIFNode> {
         
         super.init(node: SearchGIFNode())
         node.collectionNode.dataSource = dataSource
+        node.collectionNode.delegate = dataSource
         node.collectionNodeLayout?.delegate = dataSource
     }
     
@@ -39,36 +42,23 @@ final class SearchGIFVC: ASDKViewController<SearchGIFNode> {
 extension SearchGIFVC {
     
     private func configureRx() {
-        viewModel.searchQuery = navigationItem.searchController?.searchBar.rx.text.orEmpty.asDriver() ?? .just("")
-
-        Observable.merge(
-            viewModel.searchGIF(query: "Cat")
-                .asObservable(),
-            viewModel.searchQuery
-                .skip(1)
-                .debounce(.milliseconds(1000))
-                .distinctUntilChanged()
-                .map { $0.ifEmpty("Cat") }
-                .asObservable()
-                .flatMapLatest { [viewModel] in
-                    viewModel.searchGIF(query: $0)
-                }
-        )
-        .observeOn(MainScheduler.instance)
-        .bind(to: viewModel.gifs)
-        .disposed(by: disposeBag)
+        viewModel.bindGIFData(from: searchController.searchBar.rx.text.orEmpty.asDriver())
                 
         viewModel.gifs
-            .skip(1)
-            .subscribe(onNext: { [node] gifs in
+            .drive(onNext: { [unowned self] gifs in
                 node?.searchNotFoundNode.isHidden = !gifs.isEmpty
-                node?.collectionNode.invalidateCalculatedLayout()
-                node?.collectionNode.reloadData()
+                
+                if viewModel.newIndexPaths.first?.row == 0 {
+                    node.collectionNode.invalidateCalculatedLayout()
+                    node.collectionNode.reloadData()
+                } else {
+                    node.collectionNode.insertItems(at: viewModel.newIndexPaths)
+                }
             })
             .disposed(by: disposeBag)
         
         viewModel.isLoading
-            .bind(to: activityIndicator.rx.isAnimating)
+            .drive(activityIndicator.rx.isAnimating)
             .disposed(by: disposeBag)
     }
     
@@ -77,7 +67,6 @@ extension SearchGIFVC {
         navigationItem.title = "Hello Texture!"
         
         // Search bar
-        let searchController = UISearchController()
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search GIFs"
         navigationItem.searchController = searchController

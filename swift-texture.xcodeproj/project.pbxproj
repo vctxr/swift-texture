@@ -28,6 +28,7 @@
 		57D231F5263279C900F894D0 /* SearchGIFVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D231F4263279C900F894D0 /* SearchGIFVM.swift */; };
 		57D231F826327A7800F894D0 /* GiphyRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D231F726327A7800F894D0 /* GiphyRepositoryProtocol.swift */; };
 		57D231FB26327EFE00F894D0 /* SearchGIFDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D231FA26327EFE00F894D0 /* SearchGIFDataSource.swift */; };
+		57E3C1EC26334F8900A2768C /* Clamping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E3C1EB26334F8900A2768C /* Clamping.swift */; };
 		5DD2732434C9FCB783C62C6A /* Pods_swift_texture.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8200817B3B046AF7ADBFDB9 /* Pods_swift_texture.framework */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		57D231F4263279C900F894D0 /* SearchGIFVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchGIFVM.swift; sourceTree = "<group>"; };
 		57D231F726327A7800F894D0 /* GiphyRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyRepositoryProtocol.swift; sourceTree = "<group>"; };
 		57D231FA26327EFE00F894D0 /* SearchGIFDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchGIFDataSource.swift; sourceTree = "<group>"; };
+		57E3C1EB26334F8900A2768C /* Clamping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clamping.swift; sourceTree = "<group>"; };
 		B8200817B3B046AF7ADBFDB9 /* Pods_swift_texture.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_swift_texture.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F00CD75717531126268EAB05 /* Pods-swift-texture.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-swift-texture.debug.xcconfig"; path = "Target Support Files/Pods-swift-texture/Pods-swift-texture.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -175,6 +177,7 @@
 			children = (
 				57D231DF2632753E00F894D0 /* Keychain.swift */,
 				570EF3B9263297B0000E9FA5 /* AdaptiveCollectionViewLayout.swift */,
+				57E3C1EB26334F8900A2768C /* Clamping.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -333,6 +336,7 @@
 				570EF3B726328643000E9FA5 /* SearchGIFNode.swift in Sources */,
 				57D231D9263274DD00F894D0 /* NetworkManager.swift in Sources */,
 				57D231E82632774A00F894D0 /* GiphyRepository.swift in Sources */,
+				57E3C1EC26334F8900A2768C /* Clamping.swift in Sources */,
 				57D231D7263274DD00F894D0 /* GiphyEndpoint.swift in Sources */,
 				570EF3AC2632858E000E9FA5 /* GIFCellNode.swift in Sources */,
 				5707E66926326D73009BCB84 /* AppDelegate.swift in Sources */,
