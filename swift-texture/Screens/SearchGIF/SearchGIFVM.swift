@@ -60,6 +60,11 @@ final class SearchGIFVM {
     func gif(at indexPath: IndexPath) -> GIF {
         return _giphyResponse.value.data[indexPath.row]
     }
+    
+    func saveAPIKey(apiKey: String) {
+        let data = Data(apiKey.utf8)
+        Keychain.save(key: .apiKey, data: data)
+    }
 }
 
 // MARK: - Getters
@@ -99,6 +104,11 @@ extension SearchGIFVM {
     var newIndexPaths: [IndexPath] {
         let indexRange = (numberOfGIFs - paginationValue.count)..<numberOfGIFs
         return indexRange.map { IndexPath(row: $0, section: 0) }
+    }
+    
+    var apiKey: String? {
+        guard let data = Keychain.load(key: .apiKey) else { return nil }
+        return String(decoding: data, as: UTF8.self)
     }
 }
 

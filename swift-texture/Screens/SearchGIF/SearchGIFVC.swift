@@ -69,6 +69,18 @@ extension SearchGIFVC {
             })
             .disposed(by: disposeBag)
         
+        // Right bar button
+        navigationItem.rightBarButtonItem?.rx.tap
+            .throttle(.milliseconds(300), latest: false, scheduler: MainScheduler.instance)
+            .subscribe { [unowned self] _ in
+                presentAlertWithField(title: "Enter your Giphy API Key 🔑",
+                                      text: viewModel.apiKey,
+                                      placeholder: "Giphy API Key") { apiKey in
+                    viewModel.saveAPIKey(apiKey: apiKey)
+                }
+            }
+            .disposed(by: disposeBag)
+        
         // Loading state
         viewModel.isLoading
             .drive(activityIndicator.rx.isAnimating)
@@ -91,6 +103,14 @@ extension SearchGIFVC {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search GIFs"
         navigationItem.searchController = searchController
+        
+        // Bar button items
+        let rightBarButton = UIBarButtonItem(image: UIImage(systemName: "key.fill"),
+                                             style: .done,
+                                             target: nil,
+                                             action: nil)
+        rightBarButton.tintColor = .systemIndigo
+        navigationItem.setRightBarButton(rightBarButton, animated: true)
         
         // Activity indicator
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false

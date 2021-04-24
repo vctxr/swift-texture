@@ -14,6 +14,7 @@ enum KeychainKey: String {
 
 struct Keychain {
     
+    @discardableResult
     static func save(key: KeychainKey, data: Data) -> OSStatus {
         let query = [
             kSecClass as String       : kSecClassGenericPassword as String,
