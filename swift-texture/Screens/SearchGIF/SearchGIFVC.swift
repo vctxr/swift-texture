@@ -16,6 +16,11 @@ final class SearchGIFVC: ASDKViewController<SearchGIFNode> {
     
     private let activityIndicator = UIActivityIndicatorView()
     private let searchController = UISearchController()
+        
+    private var footerNode: LoadingCellNode? {
+        node.collectionNode.view.supplementaryNode(forElementKind: UICollectionView.elementKindSectionFooter,
+                                                   at: IndexPath(item: 0, section: 0)) as? LoadingCellNode
+    }
     
     init(viewModel: SearchGIFVM = SearchGIFVM()) {
         self.viewModel = viewModel
@@ -36,14 +41,21 @@ final class SearchGIFVC: ASDKViewController<SearchGIFNode> {
         configureUI()
         configureRx()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        viewModel.initialScrollOffset = -(UIDevice.current.safeAreaTopHeight + (navigationController?.navigationBar.frame.height ?? 0) + node.collectionNode.contentInset.top)
+    }
 }
 
 // MARK: - Configurations
 extension SearchGIFVC {
     
     private func configureRx() {
+        // Bind GIF data
         viewModel.bindGIFData(from: searchController.searchBar.rx.text.orEmpty.asDriver())
-                
+             
+        // Collection data
         viewModel.gifs
             .drive(onNext: { [unowned self] gifs in
                 node?.searchNotFoundNode.isHidden = !gifs.isEmpty
@@ -57,8 +69,17 @@ extension SearchGIFVC {
             })
             .disposed(by: disposeBag)
         
+        // Loading state
         viewModel.isLoading
             .drive(activityIndicator.rx.isAnimating)
+            .disposed(by: disposeBag)
+        
+        // Footer loading state
+        viewModel.shouldFetchMore
+            .distinctUntilChanged()
+            .drive(onNext: { [unowned self] shouldFetchMore in
+                _ = shouldFetchMore ? footerNode?.activityIndicator.startAnimating() : footerNode?.activityIndicator.stopAnimating()
+            })
             .disposed(by: disposeBag)
     }
     

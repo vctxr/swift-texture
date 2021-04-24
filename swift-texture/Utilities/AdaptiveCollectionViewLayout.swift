@@ -5,7 +5,7 @@
 //  Created by Victor Samuel Cuaca on 23/04/21.
 //
 
-import UIKit
+import AsyncDisplayKit
 
 protocol AdaptiveCollectionViewLayoutDelegate: AnyObject {
     func heightForItem(at indexPath: IndexPath) -> CGFloat
@@ -17,7 +17,8 @@ class AdaptiveCollectionViewLayout: UICollectionViewFlowLayout {
     
     private let numberOfColumns: Int
     private let cellPadding: CGFloat
-    private var layoutAttributesCache: [UICollectionViewLayoutAttributes] = []
+    private var itemAttributes: [UICollectionViewLayoutAttributes] = []
+    private var allAttributes: [UICollectionViewLayoutAttributes] = []
     private var contentHeight: CGFloat = 0
     private var column = 0
     private var lastItemCount = 0
@@ -27,7 +28,8 @@ class AdaptiveCollectionViewLayout: UICollectionViewFlowLayout {
     private var collectionViewContentWidth: CGFloat {
         guard let collectionView = collectionView else { return 0 }
         let insets = collectionView.contentInset
-        return collectionView.bounds.width - (insets.left + insets.right)
+        return collectionView.bounds.width -
+            (insets.left + insets.right + collectionView.safeAreaInsets.left + collectionView.safeAreaInsets.right)
     }
     
     private var columnWidth: CGFloat {
@@ -55,9 +57,9 @@ class AdaptiveCollectionViewLayout: UICollectionViewFlowLayout {
               lastItemCount < collectionView.numberOfItems(inSection: 0) else { return }
         
         // 1. Initialize the x and y offsets for the first time
-        if layoutAttributesCache.isEmpty {
+        if itemAttributes.isEmpty {
             for column in 0..<numberOfColumns {
-                xOffsets.append(CGFloat(column) * (columnWidth + cellPadding))
+                xOffsets.append(CGFloat(column) * (columnWidth + cellPadding) + collectionView.safeAreaInsets.left)
             }
             yOffsets = [CGFloat](repeating: 0, count: numberOfColumns)
         }
@@ -74,7 +76,8 @@ class AdaptiveCollectionViewLayout: UICollectionViewFlowLayout {
             // 4. Creates an UICollectionViewLayoutAttributes with the frame and add it to the cache
             let layoutAttributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
             layoutAttributes.frame = cellFrame
-            layoutAttributesCache.append(layoutAttributes)
+            itemAttributes.append(layoutAttributes)
+            allAttributes.append(layoutAttributes)
             
             // 5. Updates the collection view content height and the y offsets
             contentHeight = max(contentHeight, cellFrame.maxY)
@@ -90,24 +93,45 @@ class AdaptiveCollectionViewLayout: UICollectionViewFlowLayout {
         }
         
         lastItemCount = collectionView.numberOfItems(inSection: 0)
+        
+        // 7. Calculate the layout attributes for section footer
+        let footerAttributes = UICollectionViewLayoutAttributes(
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+            with: IndexPath(item: 0, section: 0)
+        )
+                
+        footerAttributes.frame = CGRect(
+            x: collectionView.safeAreaInsets.left,
+            y: contentHeight + collectionView.contentInset.bottom,
+            width: collectionViewContentWidth,
+            height: footerReferenceSize.height
+        )
+                
+        allAttributes.append(footerAttributes)
+        contentHeight += footerReferenceSize.height
     }
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         // Loop through the cache and look for item intersecting the visible rect
-        return layoutAttributesCache.filter { $0.frame.intersects(rect) }
+        return allAttributes.filter { $0.frame.intersects(rect) }
     }
     
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        return layoutAttributesCache[indexPath.item]
+        return itemAttributes[indexPath.item]
     }
     
     override func invalidateLayout() {
         super.invalidateLayout()
-        layoutAttributesCache.removeAll()
+        itemAttributes.removeAll()
+        allAttributes.removeAll()
         xOffsets.removeAll()
         yOffsets.removeAll()
         contentHeight = 0
         lastItemCount = 0
         column = 0
+    }
+    
+    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+        !(collectionView?.bounds.size.equalTo(newBounds.size) ?? true)
     }
 }

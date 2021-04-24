@@ -7,29 +7,20 @@
 
 import RxSwift
 import RxCocoa
-import AsyncDisplayKit
 
 final class SearchGIFVM {
     
+    private let _isLoading     = BehaviorRelay<Bool>(value: false)
     private let _giphyResponse = BehaviorRelay<GiphyResponse>(value: GiphyResponse())
     private let _searchQuery   = BehaviorRelay<String>(value: "")
-    private let _isLoading     = BehaviorRelay<Bool>(value: false)
     private let disposeBag     = DisposeBag()
     
+    var initialScrollOffset: CGFloat = 0    
     private let defaultSearchQuery = "Cat"
     private let repository: GiphyRepositoryProtocol
     
     init(repository: GiphyRepositoryProtocol = GiphyRepository()) {
         self.repository = repository
-    }
-    
-    func searchGIF(query: String, offset: Int = 0) -> Single<GiphyResponse> {
-        _isLoading.accept(true)
-        
-        return repository.searchGIF(query: query, offset: offset)
-            .do(onDispose: { [_isLoading] in
-                _isLoading.accept(false)
-            })
     }
     
     func bindGIFData(from searchQuery: Driver<String>) {
@@ -39,32 +30,29 @@ final class SearchGIFVM {
         
         Observable.merge(
             searchGIF(query: defaultSearchQuery)
-                .asObservable(),
+                .asObservable()
+                .catchErrorJustReturn(GiphyResponse()),
             _searchQuery
+                .distinctUntilChanged()
                 .skip(1)
                 .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
-                .distinctUntilChanged()
                 .flatMapLatest { [unowned self] query in
                     searchGIF(query: query.ifEmpty(defaultSearchQuery))
+                        .catchErrorJustReturn(GiphyResponse())
                 }
         )
-        .catchErrorJustReturn(GiphyResponse())
         .bind(to: _giphyResponse)
         .disposed(by: disposeBag)
     }
     
-    func fetchNewBatch(with context: ASBatchContext) {
+    func fetchNewBatch(completion: @escaping () -> Void) {
         repository.searchGIF(query: _searchQuery.value.ifEmpty(defaultSearchQuery),
-                             offset: pagination.offset + pagination.count)
+                             offset: paginationValue.offset + paginationValue.count)
             .do(onDispose: {
-                context.completeBatchFetching(true)
+                completion()
             })
-            .subscribe(onSuccess: { response in
-                var _response = self._giphyResponse.value
-                _response.data.append(contentsOf: response.data)
-                _response.pagination = response.pagination
-                
-                self._giphyResponse.accept(_response)
+            .subscribe(onSuccess: { [unowned self] response in
+                _giphyResponse.accept(createNewBatchResponse(newResponse: response))
             })
             .disposed(by: disposeBag)
     }
@@ -77,24 +65,61 @@ final class SearchGIFVM {
 // MARK: - Getters
 extension SearchGIFVM {
     
+    var isLoading: Driver<Bool> {
+        _isLoading.asDriver()
+    }
+    
     var gifs: Driver<[GIF]> {
-        _giphyResponse.map(\.data).asDriver(onErrorJustReturn: [])
+        _giphyResponse.map(\.data)
+            .asDriver(onErrorJustReturn: [])
+    }
+    
+    var shouldFetchMore: Driver<Bool> {
+        _giphyResponse
+            .map { $0.pagination.offset < $0.pagination.totalCount }
+            .asDriver(onErrorJustReturn: true)
     }
     
     var numberOfGIFs: Int {
         _giphyResponse.value.data.count
     }
     
-    var isLoading: Driver<Bool> {
-        _isLoading.asDriver()
-    }
-    
-    var pagination: Pagination {
+    var paginationValue: Pagination {
         _giphyResponse.value.pagination
     }
     
+    var isLoadingValue: Bool {
+        _isLoading.value
+    }
+    
+    var shouldFetchMoreValue: Bool {
+        paginationValue.offset <= paginationValue.totalCount
+    }
+    
     var newIndexPaths: [IndexPath] {
-        let indexRange = (numberOfGIFs - pagination.count)..<numberOfGIFs
+        let indexRange = (numberOfGIFs - paginationValue.count)..<numberOfGIFs
         return indexRange.map { IndexPath(row: $0, section: 0) }
+    }
+}
+
+// MARK: - Private Implementations
+extension SearchGIFVM {
+    
+    private func searchGIF(query: String, offset: Int = 0) -> Single<GiphyResponse> {
+        _isLoading.accept(true)
+        
+        return repository.searchGIF(query: query, offset: offset)
+            .retry(3)
+            .do(onDispose: { [_isLoading] in
+                _isLoading.accept(false)
+            })
+    }
+    
+    private func createNewBatchResponse(newResponse: GiphyResponse) -> GiphyResponse {
+        var response = _giphyResponse.value
+        response.data.append(contentsOf: newResponse.data)
+        response.pagination = newResponse.pagination
+        response.pagination.count = newResponse.data.count
+        return response
     }
 }

@@ -18,6 +18,8 @@
 		570EF3BA263297B0000E9FA5 /* AdaptiveCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570EF3B9263297B0000E9FA5 /* AdaptiveCollectionViewLayout.swift */; };
 		570EF3C22632A4F7000E9FA5 /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570EF3C12632A4F7000E9FA5 /* String+Ext.swift */; };
 		570EF3C72632A6E8000E9FA5 /* SearchNotFoundNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570EF3C62632A6E8000E9FA5 /* SearchNotFoundNode.swift */; };
+		578F64552633C70000F33EE6 /* LoadingCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578F64542633C70000F33EE6 /* LoadingCellNode.swift */; };
+		578F64662633F3D600F33EE6 /* UIDevice+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578F64652633F3D600F33EE6 /* UIDevice+Ext.swift */; };
 		57D231D7263274DD00F894D0 /* GiphyEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D231D2263274DD00F894D0 /* GiphyEndpoint.swift */; };
 		57D231D8263274DD00F894D0 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D231D3263274DD00F894D0 /* Endpoint.swift */; };
 		57D231D9263274DD00F894D0 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D231D4263274DD00F894D0 /* NetworkManager.swift */; };
@@ -47,6 +49,8 @@
 		570EF3B9263297B0000E9FA5 /* AdaptiveCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveCollectionViewLayout.swift; sourceTree = "<group>"; };
 		570EF3C12632A4F7000E9FA5 /* String+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ext.swift"; sourceTree = "<group>"; };
 		570EF3C62632A6E8000E9FA5 /* SearchNotFoundNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNotFoundNode.swift; sourceTree = "<group>"; };
+		578F64542633C70000F33EE6 /* LoadingCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingCellNode.swift; sourceTree = "<group>"; };
+		578F64652633F3D600F33EE6 /* UIDevice+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Ext.swift"; sourceTree = "<group>"; };
 		57D231D2263274DD00F894D0 /* GiphyEndpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyEndpoint.swift; sourceTree = "<group>"; };
 		57D231D3263274DD00F894D0 /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		57D231D4263274DD00F894D0 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
@@ -142,6 +146,7 @@
 				570EF3AF263285C8000E9FA5 /* BaseDisplayNode.swift */,
 				570EF3B3263285F6000E9FA5 /* BaseCellNode.swift */,
 				570EF3C62632A6E8000E9FA5 /* SearchNotFoundNode.swift */,
+				578F64542633C70000F33EE6 /* LoadingCellNode.swift */,
 			);
 			path = Nodes;
 			sourceTree = "<group>";
@@ -150,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				570EF3C12632A4F7000E9FA5 /* String+Ext.swift */,
+				578F64652633F3D600F33EE6 /* UIDevice+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -349,7 +355,9 @@
 				57D231F5263279C900F894D0 /* SearchGIFVM.swift in Sources */,
 				57D231DA263274DD00F894D0 /* Networking.swift in Sources */,
 				570EF3B4263285F6000E9FA5 /* BaseCellNode.swift in Sources */,
+				578F64552633C70000F33EE6 /* LoadingCellNode.swift in Sources */,
 				57D231D8263274DD00F894D0 /* Endpoint.swift in Sources */,
+				578F64662633F3D600F33EE6 /* UIDevice+Ext.swift in Sources */,
 				57D231FB26327EFE00F894D0 /* SearchGIFDataSource.swift in Sources */,
 				570EF3C72632A6E8000E9FA5 /* SearchNotFoundNode.swift in Sources */,
 			);

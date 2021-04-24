@@ -14,6 +14,7 @@ final class SearchNotFoundNode: BaseDisplayNode {
     
     override init() {
         super.init()
+        
         backgroundColor = .systemBackground
         imageNode.image = UIImage(named: "alert")
         textNode.attributedText = NSAttributedString(

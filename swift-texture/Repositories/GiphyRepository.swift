@@ -28,7 +28,7 @@ struct GiphyRepository: GiphyRepositoryProtocol {
                 }
             }
             
-           return Disposables.create()
+            return Disposables.create(with: networkManager.cancel)
         }
     }
 }
