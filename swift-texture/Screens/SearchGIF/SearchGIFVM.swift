@@ -98,12 +98,14 @@ extension SearchGIFVM {
     }
     
     var shouldFetchMoreValue: Bool {
-        paginationValue.offset <= paginationValue.totalCount
+        paginationValue.offset < paginationValue.totalCount
     }
     
     var newIndexPaths: [IndexPath] {
         let indexRange = (numberOfGIFs - paginationValue.count)..<numberOfGIFs
-        return indexRange.map { IndexPath(row: $0, section: 0) }
+        return indexRange
+            .filter { $0 >= 0 }
+            .map { IndexPath(row: $0, section: 0) }
     }
     
     var apiKey: String? {

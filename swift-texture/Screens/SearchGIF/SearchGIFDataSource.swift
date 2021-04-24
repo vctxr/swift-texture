@@ -42,7 +42,7 @@ extension SearchGIFDataSource: ASCollectionDelegate, ASCollectionDelegateFlowLay
         return viewModel.shouldFetchMoreValue && !viewModel.isLoadingValue
     }
     
-    func collectionNode(_ collectionNode: ASCollectionNode, willBeginBatchFetchWith context: ASBatchContext) {        
+    func collectionNode(_ collectionNode: ASCollectionNode, willBeginBatchFetchWith context: ASBatchContext) {      
         viewModel.fetchNewBatch {
             context.completeBatchFetching(true)
         }

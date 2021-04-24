@@ -10,16 +10,29 @@ import AsyncDisplayKit
 final class GIFCellNode: BaseCellNode {
     
     let imageNode = ASNetworkImageNode()
-    let image = ASImageNode()
     
     init(gif: GIF) {
         super.init()
-        imageNode.cornerRadius = 8
+        cornerRadius = 8
         imageNode.url = URL(string: gif.urlString)
         imageNode.backgroundColor = .systemFill
+        imageNode.delegate = self
     }
     
     override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
         return ASWrapperLayoutSpec(layoutElement: imageNode)
+    }
+
+    override func layoutDidFinish() {
+        super.layoutDidFinish()
+        self.layer.startShimmering()
+    }
+}
+
+// MARK: - ASNetworkImageNodeDelegate
+extension GIFCellNode: ASNetworkImageNodeDelegate {
+    
+    func imageNodeDidLoadImage(fromCache imageNode: ASNetworkImageNode) {
+        self.layer.stopShimmering()
     }
 }

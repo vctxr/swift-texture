@@ -21,6 +21,7 @@
 		578F64552633C70000F33EE6 /* LoadingCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578F64542633C70000F33EE6 /* LoadingCellNode.swift */; };
 		578F64662633F3D600F33EE6 /* UIDevice+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578F64652633F3D600F33EE6 /* UIDevice+Ext.swift */; };
 		578F64692633F6E400F33EE6 /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578F64682633F6E400F33EE6 /* UIViewController+Ext.swift */; };
+		57908FC126348B070061C4AF /* CALayer+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57908FC026348B070061C4AF /* CALayer+Ext.swift */; };
 		57D231D7263274DD00F894D0 /* GiphyEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D231D2263274DD00F894D0 /* GiphyEndpoint.swift */; };
 		57D231D8263274DD00F894D0 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D231D3263274DD00F894D0 /* Endpoint.swift */; };
 		57D231D9263274DD00F894D0 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D231D4263274DD00F894D0 /* NetworkManager.swift */; };
@@ -53,6 +54,7 @@
 		578F64542633C70000F33EE6 /* LoadingCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingCellNode.swift; sourceTree = "<group>"; };
 		578F64652633F3D600F33EE6 /* UIDevice+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Ext.swift"; sourceTree = "<group>"; };
 		578F64682633F6E400F33EE6 /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
+		57908FC026348B070061C4AF /* CALayer+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Ext.swift"; sourceTree = "<group>"; };
 		57D231D2263274DD00F894D0 /* GiphyEndpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyEndpoint.swift; sourceTree = "<group>"; };
 		57D231D3263274DD00F894D0 /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		57D231D4263274DD00F894D0 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 				570EF3C12632A4F7000E9FA5 /* String+Ext.swift */,
 				578F64652633F3D600F33EE6 /* UIDevice+Ext.swift */,
 				578F64682633F6E400F33EE6 /* UIViewController+Ext.swift */,
+				57908FC026348B070061C4AF /* CALayer+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -350,6 +353,7 @@
 				57D231D7263274DD00F894D0 /* GiphyEndpoint.swift in Sources */,
 				570EF3AC2632858E000E9FA5 /* GIFCellNode.swift in Sources */,
 				5707E66926326D73009BCB84 /* AppDelegate.swift in Sources */,
+				57908FC126348B070061C4AF /* CALayer+Ext.swift in Sources */,
 				570EF3B0263285C8000E9FA5 /* BaseDisplayNode.swift in Sources */,
 				5707E68426326E57009BCB84 /* SearchGIFVC.swift in Sources */,
 				57D231EF263277FA00F894D0 /* GiphyResponse.swift in Sources */,

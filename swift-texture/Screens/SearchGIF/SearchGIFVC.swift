@@ -59,26 +59,21 @@ extension SearchGIFVC {
         viewModel.gifs
             .drive(onNext: { [unowned self] gifs in
                 node?.searchNotFoundNode.isHidden = !gifs.isEmpty
-                
-                if viewModel.newIndexPaths.first?.row == 0 {
-                    node.collectionNode.invalidateCalculatedLayout()
-                    node.collectionNode.reloadData()
-                } else {
-                    node.collectionNode.insertItems(at: viewModel.newIndexPaths)
-                }
+                updateCollectionNodeData(for: viewModel.newIndexPaths)
             })
             .disposed(by: disposeBag)
         
         // Right bar button
         navigationItem.rightBarButtonItem?.rx.tap
             .throttle(.milliseconds(300), latest: false, scheduler: MainScheduler.instance)
-            .subscribe { [unowned self] _ in
+            .flatMap { [unowned self] in
                 presentAlertWithField(title: "Enter your Giphy API Key 🔑",
                                       text: viewModel.apiKey,
-                                      placeholder: "Giphy API Key") { apiKey in
-                    viewModel.saveAPIKey(apiKey: apiKey)
-                }
+                                      placeholder: "Giphy API Key")
             }
+            .subscribe(onNext: { [unowned self] apiKey in
+                viewModel.saveAPIKey(apiKey: apiKey)
+            })
             .disposed(by: disposeBag)
         
         // Loading state
@@ -88,31 +83,51 @@ extension SearchGIFVC {
         
         // Footer loading state
         viewModel.shouldFetchMore
-            .distinctUntilChanged()
             .drive(onNext: { [unowned self] shouldFetchMore in
-                _ = shouldFetchMore ? footerNode?.activityIndicator.startAnimating() : footerNode?.activityIndicator.stopAnimating()
+                footerNode?.isHidden = !shouldFetchMore
             })
             .disposed(by: disposeBag)
     }
     
     private func configureUI() {
-        node.backgroundColor = .systemBackground
         navigationItem.title = "Hello Texture!"
-        
-        // Search bar
+        node.backgroundColor = .systemBackground
+        configureSearchBar()
+        configureBarButtonItems()
+        configureActivityIndicator()
+    }
+}
+
+// MARK: - Private Implementations
+extension SearchGIFVC {
+    
+    private func updateCollectionNodeData(for newIndexPaths: [IndexPath]) {
+        if newIndexPaths.first?.row == 0 {
+            node.collectionNode.invalidateCalculatedLayout()
+            node.collectionNode.reloadData()
+            node.collectionNode.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+        } else {
+            node.collectionNode.insertItems(at: newIndexPaths)
+        }
+    }
+    
+    private func configureSearchBar() {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search GIFs"
         navigationItem.searchController = searchController
-        
-        // Bar button items
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
+    
+    private func configureBarButtonItems() {
         let rightBarButton = UIBarButtonItem(image: UIImage(systemName: "key.fill"),
                                              style: .done,
                                              target: nil,
                                              action: nil)
         rightBarButton.tintColor = .systemIndigo
         navigationItem.setRightBarButton(rightBarButton, animated: true)
-        
-        // Activity indicator
+    }
+    
+    private func configureActivityIndicator() {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.backgroundColor = .systemBackground
         node.view.addSubview(activityIndicator)

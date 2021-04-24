@@ -84,8 +84,7 @@ class AdaptiveCollectionViewLayout: UICollectionViewFlowLayout {
             yOffsets[column] += (cellHeight + cellPadding)
             
             // 6. Adjust the next item to be in the column with the minimum y offset so the columns are always in balanced height
-            let minYOffset = yOffsets.min()
-            if let minYIndex = yOffsets.indices.filter({ yOffsets[$0] == minYOffset }).first {
+            if let minYOffset = yOffsets.min(), let minYIndex = yOffsets.firstIndex(of: minYOffset) {
                 column = minYIndex
             } else {
                 column = column < (numberOfColumns - 1) ? (column + 1) : 0
@@ -95,18 +94,20 @@ class AdaptiveCollectionViewLayout: UICollectionViewFlowLayout {
         lastItemCount = collectionView.numberOfItems(inSection: 0)
         
         // 7. Calculate the layout attributes for section footer
+        guard footerReferenceSize.height > 0 else { return }
+
         let footerAttributes = UICollectionViewLayoutAttributes(
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
             with: IndexPath(item: 0, section: 0)
         )
-                
+              
         footerAttributes.frame = CGRect(
             x: collectionView.safeAreaInsets.left,
             y: contentHeight + collectionView.contentInset.bottom,
             width: collectionViewContentWidth,
             height: footerReferenceSize.height
         )
-                
+
         allAttributes.append(footerAttributes)
         contentHeight += footerReferenceSize.height
     }
@@ -122,6 +123,7 @@ class AdaptiveCollectionViewLayout: UICollectionViewFlowLayout {
     
     override func invalidateLayout() {
         super.invalidateLayout()
+        
         itemAttributes.removeAll()
         allAttributes.removeAll()
         xOffsets.removeAll()
