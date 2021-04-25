@@ -7,6 +7,7 @@
 </p>
 
 Learning the implementation of [Texture](https://github.com/TextureGroup/Texture) framework to build asynchronous UI and also reactive programming using [RxSwift](https://github.com/ReactiveX/RxSwift). This app demonstrates how we can build smooth and responsive UIs and also reacting to any state changes by building a GIF finder app. This app was inspired by my previous similar GIF app using `Operation` in Swift. Go check it out! ([link to the repo](https://github.com/vctxr/swift-async-operation))
+<br><br>
 
 > **Note:** I'm currently still learning about these frameworks so the implementation of these frameworks are based on my personal learning on the topic 📖. Oh and this app also fetches GIF from the Giphy API which requires an API key 🔑 which I kept secret, so please use your own API key instead WKWK.
 
