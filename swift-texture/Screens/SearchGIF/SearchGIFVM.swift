@@ -32,11 +32,14 @@ final class SearchGIFVM {
                 .asObservable()
                 .catchErrorJustReturn(GiphyResponse()),
             _searchQuery
+                .map { [defaultSearchQuery] query in
+                    query.ifEmpty(defaultSearchQuery)
+                }
+                .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
                 .distinctUntilChanged()
                 .skip(1)
-                .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
                 .flatMapLatest { [unowned self] query in
-                    searchGIF(query: query.ifEmpty(defaultSearchQuery))
+                    searchGIF(query: query)
                         .catchErrorJustReturn(GiphyResponse())
                 }
         )

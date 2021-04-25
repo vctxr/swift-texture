@@ -79,7 +79,7 @@ extension SearchGIFVC {
         // Footer loading state
         viewModel.shouldFetchMore
             .distinctUntilChanged()
-            .drive(onNext: { [footerNode] shouldFetchMore in
+            .drive(onNext: { [unowned self] shouldFetchMore in
                 footerNode?.isHidden = !shouldFetchMore
             })
             .disposed(by: disposeBag)
