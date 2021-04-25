@@ -26,6 +26,7 @@ final class SearchGIFNode: BaseDisplayNode {
         collectionNode.alwaysBounceVertical = true
         
         super.init()
+        backgroundColor = .systemBackground
     }
     
     override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {

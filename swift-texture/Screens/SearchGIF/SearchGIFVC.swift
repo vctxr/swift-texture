@@ -41,11 +41,6 @@ final class SearchGIFVC: ASDKViewController<SearchGIFNode> {
         configureUI()
         configureRx()
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        viewModel.initialScrollOffset = -(UIDevice.current.safeAreaTopHeight + (navigationController?.navigationBar.frame.height ?? 0) + node.collectionNode.contentInset.top)
-    }
 }
 
 // MARK: - Configurations
@@ -53,7 +48,7 @@ extension SearchGIFVC {
     
     private func configureRx() {
         // Bind GIF data
-        viewModel.bindGIFData(from: searchController.searchBar.rx.text.orEmpty.asDriver())
+        viewModel.bindGIFData(from: searchController.searchBar.rx.text.orEmpty)
              
         // Collection data
         viewModel.gifs
@@ -71,7 +66,7 @@ extension SearchGIFVC {
                                       text: viewModel.apiKey,
                                       placeholder: "Giphy API Key")
             }
-            .subscribe(onNext: { [unowned self] apiKey in
+            .subscribe(onNext: { [viewModel] apiKey in
                 viewModel.saveAPIKey(apiKey: apiKey)
             })
             .disposed(by: disposeBag)
@@ -83,7 +78,8 @@ extension SearchGIFVC {
         
         // Footer loading state
         viewModel.shouldFetchMore
-            .drive(onNext: { [unowned self] shouldFetchMore in
+            .distinctUntilChanged()
+            .drive(onNext: { [footerNode] shouldFetchMore in
                 footerNode?.isHidden = !shouldFetchMore
             })
             .disposed(by: disposeBag)
@@ -91,7 +87,6 @@ extension SearchGIFVC {
     
     private func configureUI() {
         navigationItem.title = "Hello Texture!"
-        node.backgroundColor = .systemBackground
         configureSearchBar()
         configureBarButtonItems()
         configureActivityIndicator()

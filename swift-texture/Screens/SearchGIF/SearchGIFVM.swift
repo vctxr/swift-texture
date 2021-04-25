@@ -15,7 +15,6 @@ final class SearchGIFVM {
     private let _searchQuery   = BehaviorRelay<String>(value: "")
     private let disposeBag     = DisposeBag()
     
-    var initialScrollOffset: CGFloat = 0    
     private let defaultSearchQuery = "Cat"
     private let repository: GiphyRepositoryProtocol
     
@@ -23,9 +22,9 @@ final class SearchGIFVM {
         self.repository = repository
     }
     
-    func bindGIFData(from searchQuery: Driver<String>) {
+    func bindGIFData(from searchQuery: ControlProperty<String>) {
         searchQuery
-            .drive(_searchQuery)
+            .bind(to: _searchQuery)
             .disposed(by: disposeBag)
         
         Observable.merge(
@@ -51,8 +50,10 @@ final class SearchGIFVM {
             .do(onDispose: {
                 completion()
             })
-            .subscribe(onSuccess: { [unowned self] response in
-                _giphyResponse.accept(createNewBatchResponse(newResponse: response))
+            .map { [unowned self] response in
+                createNewBatchResponse(newResponse: response) }
+            .subscribe(onSuccess: { [_giphyResponse] newBatchResponse in
+                _giphyResponse.accept(newBatchResponse)
             })
             .disposed(by: disposeBag)
     }

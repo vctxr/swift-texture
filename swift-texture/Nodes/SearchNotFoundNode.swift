@@ -18,9 +18,10 @@ final class SearchNotFoundNode: BaseDisplayNode {
         backgroundColor = .systemBackground
         imageNode.image = UIImage(named: "alert")
         textNode.attributedText = NSAttributedString(
-            string: "Uh oh.. we couldn't find anything.\nWe could always try again ✨🌈",
+            string: "Uh oh.. we couldn't find anything.\nTry checking your API key ✨🌈",
             attributes: [
-                NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .subheadline)
+                NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .subheadline),
+                NSAttributedString.Key.foregroundColor: UIColor.label
             ]
         )
     }

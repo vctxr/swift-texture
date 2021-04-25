@@ -47,15 +47,6 @@ extension SearchGIFDataSource: ASCollectionDelegate, ASCollectionDelegateFlowLay
             context.completeBatchFetching(true)
         }
     }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offset = scrollView.contentOffset
-        
-        // iOS bug when tapping status bar (scroll to top gesture) then tapping search bar will result in scroll offset not properly calculated. This line makes sure that when that gesture is performed, the scroll content offset is calculated properly.
-
-        guard offset.y == (viewModel.initialScrollOffset + 2) && !scrollView.isTracking else { return }
-        scrollView.setContentOffset(CGPoint(x: offset.x, y: viewModel.initialScrollOffset), animated: true)
-    }
 }
 
 // MARK: - AdaptiveCollectionViewLayout
